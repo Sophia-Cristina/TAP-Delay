@@ -3,7 +3,7 @@
 
     DelayClass.h
     Created: 30 Jul 2020 2:57:19pm
-    Author:  Altech
+    Author:  Sophia Cristina
 
   ==============================================================================
 */
