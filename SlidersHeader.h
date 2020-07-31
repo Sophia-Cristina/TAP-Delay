@@ -3,7 +3,7 @@
 
     SlidersHeader.h
     Created: 28 Jul 2020 7:56:27pm
-    Author:  Altech
+    Author:  Sophia Cristina
 
   ==============================================================================
 */
