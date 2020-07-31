@@ -8,3 +8,4 @@ It is an awesome channel!
 
 HOWEVER, it is not working for me!
 I'll edit this readme after i fix this!
+The lines in comment is the different ways i tried it.
