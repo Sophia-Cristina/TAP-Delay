@@ -21,7 +21,7 @@ class DelayClass  : public juce::Component
 public:
 
     float MSNum = 100, FeedBNum = 75, FloorNum = 1, MultiNum = 0.5, SamplesinMS; // MS number from Slider, the same for the rest | SamplesinMS = How much samples there is in a millisecond
-     // SampleRate | Delay Buffer Size from total permitted MS from the slider | The size of a Data block from a Buffer | Number of samples inside the delay time set by the slider (MSNum)
+     // SampleRate | Delay Buffer Size from total permitted MS value from the slider | The size of a Data block from a Buffer | Number of samples inside the delay time set by the slider (MSNum)
     int SampleRate, DelayBFSize, BufferSize = 0, DelaySamples;
     //std::vector<int> DelayLine = std::vector<int>::vector(44100);
     juce::AudioBuffer<float> DelayBuffer;
@@ -39,11 +39,11 @@ public:
     //void SetDelayLineBuffer(int Size) { std::vector<int> NewDelayLine(Size); for (int n = 0; n < NewDelayLine.size(); ++n) { NewDelayLine[n] = 0; } DelayLine = NewDelayLine; }
 
 
-    /*void FillDelayBuffer(int channel, const int BFDataSize, const int DelayBFDataSize, const float* BFDataReadPointer, const float* DelayBFDataReadPointer)
+    void FillDelayBuffer(int channel, const int BFDataSize, const int DelayBFDataSize, const float* BFDataReadPointer, const float* DelayBFDataReadPointer)
     {
         if (DelayBFDataSize > BFDataSize + WritePos)
         {
-            DelayBuffer.copyFromWithRamp(channel, WritePos, DelayBFDataReadPointer, BFDataSize, 0.8, 0.8);
+            DelayBuffer.copyFromWithRamp(channel, WritePos, BFDataReadPointer, BFDataSize, 0.8, 0.8);
         }
         else
         {
@@ -67,7 +67,7 @@ public:
             buffer.addFrom(channel, 0, DelayBFDataReadPointer + ReadPos, BFRemaining); buffer.addFrom(channel, BFRemaining, DelayBFDataReadPointer, BFDataSize - BFRemaining);
         }
 
-    }*/
+    }
 
     // IF YOU SUDDENLY NEED GRAPHS, HERE IT IS!!!!
     // MAYBE FOR INFORMATION ON SCREEN!
