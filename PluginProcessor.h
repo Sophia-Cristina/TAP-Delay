@@ -34,10 +34,6 @@ public:
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
    #endif
 
-    void FillDelayBuffer(int channel, const int BFDataSize, const int DelayBFDataSize, const float* BFDataReadPointer, const float* DelayBFDataReadPointer);
-
-    void GetFromDelayBuffer(juce::AudioBuffer<float>& buffer, int channel, const int BFDataSize, const int DelayBFDataSize, const float* BFDataReadPointer, const float* DelayBFDataReadPointer);
-
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
 
     //==============================================================================
