@@ -96,12 +96,10 @@ void NewProjectAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
     Delay.SampleRate = sampleRate;
-    Delay.SamplesinMS = sampleRate / 1000; // How much samples in a millisecond // IF AUDIO CLIPS CHANGE BACK TO (sampleRate + samplesPerBlock) AS AN USER NOTED IN THE COMMENT SECTION OF "TAP"
-    //int SamplesForBufferSize = (sampleRate + samplesPerBlock) / 1000; // How much samples in a millisecond // IF AUDIO CLIPS CHANGE BACK TO (sampleRate + samplesPerBlock) AS AN USER NOTED IN THE COMMENT SECTION OF "TAP"
-    //int SamplesForBufferSize = 2 * (sampleRate + samplesPerBlock); // How much samples in a millisecond // IF AUDIO CLIPS CHANGE BACK TO (sampleRate + samplesPerBlock) AS AN USER NOTED IN THE COMMENT SECTION OF "TAP"
+    Delay.SamplesinMS = sampleRate / 1000; // How much samples in a millisecond
     //int SamplesForBufferSize = (sampleRate * samplesPerBlock) / 1000; // How much samples in a millisecond // IF AUDIO CLIPS CHANGE BACK TO (sampleRate + samplesPerBlock) AS AN USER NOTED IN THE COMMENT SECTION OF "TAP"
-    //Delay.DelayBFSize = 5000 * SamplesForBufferSize; // Total MS the slider permits in buffer size
-    Delay.DelayBFSize = 2 * (sampleRate + samplesPerBlock); // Total MS the slider permits in buffer size
+    int SamplesForBufferSize = (sampleRate + samplesPerBlock) / 1000;
+    Delay.DelayBFSize = 5023 * SamplesForBufferSize; // 5000 is the total MS the slider permits in buffer size
     if (Delay.DelayBFSize < 1) { Delay.DelayBFSize = 1; }
     Delay.DelayBuffer.setSize(getTotalNumInputChannels(), Delay.DelayBFSize);
 }
@@ -160,7 +158,7 @@ void NewProjectAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
 
-   // !!!!!!! BUPProc È o backup da vers„o antiga desse mÈtodo !!!!!!!
+   // !!!!!!! BUPProc √© o backup da vers√£o antiga desse m√©todo !!!!!!!
 
     const int BFDataSize = buffer.getNumSamples(); Delay.BufferSize = BFDataSize;
     const int DelayBFDataSize = Delay.DelayBuffer.getNumSamples();
@@ -174,10 +172,8 @@ void NewProjectAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
         const float* DelayBFDataReadPointer = Delay.DelayBuffer.getReadPointer(channel);
         
         // COPY DATA:
-        //Delay.FillDelayBuffer(channel, BFDataSize, DelayBFDataSize, BFDataReadPointer, DelayBFDataReadPointer);
-        //Delay.GetFromDelayBuffer(buffer, channel, BFDataSize, DelayBFDataSize, BFDataReadPointer, DelayBFDataReadPointer);
-        FillDelayBuffer(channel, BFDataSize, DelayBFDataSize, BFDataReadPointer, DelayBFDataReadPointer);
-        GetFromDelayBuffer(buffer, channel, BFDataSize, DelayBFDataSize, BFDataReadPointer, DelayBFDataReadPointer);
+        Delay.FillDelayBuffer(channel, BFDataSize, DelayBFDataSize, BFDataReadPointer, DelayBFDataReadPointer);
+        Delay.GetFromDelayBuffer(buffer, channel, BFDataSize, DelayBFDataSize, BFDataReadPointer, DelayBFDataReadPointer);
         /*for (int Sample = 0; Sample < buffer.getNumSamples(); ++Sample)
         { 
 
@@ -185,37 +181,6 @@ void NewProjectAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
     }
 
     Delay.WritePos += BFDataSize; Delay.WritePos %= DelayBFDataSize;
-}
-
-void NewProjectAudioProcessor::FillDelayBuffer(int channel, const int BFDataSize, const int DelayBFDataSize, const float* BFDataReadPointer, const float* DelayBFDataReadPointer)
-{
-    if (DelayBFDataSize > BFDataSize + Delay.WritePos)
-    {
-        Delay.DelayBuffer.copyFromWithRamp(channel, Delay.WritePos, DelayBFDataReadPointer, BFDataSize, 0.8, 0.8);
-    }
-    else
-    {
-        const int BFRemaining = DelayBFDataSize - Delay.WritePos;
-        Delay.DelayBuffer.copyFromWithRamp(channel, Delay.WritePos, BFDataReadPointer, BFRemaining, 0.8, 0.8);
-        Delay.DelayBuffer.copyFromWithRamp(channel, 0, BFDataReadPointer, BFDataSize - BFRemaining, 0.8, 0.8);
-        //DelayBuffer.copyFromWithRamp(channel, 0, BFDataReadPointer, BFDataSize + BFRemaining, 0.8, 0.8); // If you hear cracks, this is a fix by a user in the comment section of The Audio Programmer tuto 40
-    }
-}
-
-void NewProjectAudioProcessor::GetFromDelayBuffer(juce::AudioBuffer<float>& buffer, int channel, const int BFDataSize, const int DelayBFDataSize, const float* BFDataReadPointer, const float* DelayBFDataReadPointer)
-{
-    // DelayBFDataSize is just the DelayBFSize, but to not mix both togheter, the data in DataSize means that is gathered from the processblock method.
-    // static_cast<int> is equal to doing (int)1.0!
-    //const int ReadPos = static_cast<int> (DelayBFDataSize + Delay.WritePos - (Delay.MSNum * Delay.SamplesinMS)) % DelayBFDataSize;
-    const int ReadPos = static_cast<int> (DelayBFDataSize + Delay.WritePos - (Delay.MSNum * Delay.SamplesinMS)) % DelayBFDataSize;
-
-    if (DelayBFDataSize > BFDataSize + ReadPos) { buffer.addFrom(channel, 0, DelayBFDataReadPointer + ReadPos, BFDataSize); }
-    else
-    {
-        const int BFRemaining = DelayBFDataSize - ReadPos;
-        buffer.addFrom(channel, 0, DelayBFDataReadPointer + ReadPos, BFRemaining); buffer.addFrom(channel, BFRemaining, DelayBFDataReadPointer, BFDataSize - BFRemaining);
-    }
-
 }
 
 // #################################################
