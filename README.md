@@ -6,6 +6,6 @@ https://www.youtube.com/watch?v=IRFUYGkMV8w
 
 It is an awesome channel!
 
-HOWEVER, it is not working for me!
-I'll edit this readme after i fix this!
-The lines in comment is the different ways i tried it.
+Now this delay is working!
+When i learn how to do the feedback from "The Audio Programmer", i'll edit this again!
+Thanks for @Rob2k of the TAP community for figuring out the problem! :p
