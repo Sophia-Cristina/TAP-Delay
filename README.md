@@ -11,3 +11,5 @@ When i learn how to do the feedback from "The Audio Programmer", i'll edit this 
 Thanks for @Rob2k of the TAP community for figuring out the problem! :p
 
 Later i'll add a modulation method to do a delay i used in some musics but i never saw someone making it!
+You'll find eventually here:
+https://github.com/Sophia-Cristina/Modulating-Delay
