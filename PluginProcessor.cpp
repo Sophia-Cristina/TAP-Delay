@@ -165,15 +165,18 @@ void NewProjectAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
-        auto* channelData = buffer.getWritePointer (channel);
-        auto* DelayBFData = buffer.getWritePointer (channel);
+        //float* channelData = buffer.getWritePointer (channel);
+        //float* DelayBFData = buffer.getWritePointer (channel);
 
         const float* BFDataReadPointer = buffer.getReadPointer(channel);
         const float* DelayBFDataReadPointer = Delay.DelayBuffer.getReadPointer(channel);
+
+        float* DryBuffer = buffer.getWritePointer(channel);
         
         // COPY DATA:
         Delay.FillDelayBuffer(channel, BFDataSize, DelayBFDataSize, BFDataReadPointer, DelayBFDataReadPointer);
         Delay.GetFromDelayBuffer(buffer, channel, BFDataSize, DelayBFDataSize, BFDataReadPointer, DelayBFDataReadPointer);
+        Delay.FeedbackDelay(channel, BFDataSize, DelayBFDataSize, DryBuffer);
         /*for (int Sample = 0; Sample < buffer.getNumSamples(); ++Sample)
         { 
 
